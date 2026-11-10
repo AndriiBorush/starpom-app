@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Старпом">
+<meta name="theme-color" content="#0B0D10">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Старпом</title>
+<style>
+:root{--bg:#0B0D10;--card:#15181E;--line:#262B34;--fg:#F2F4F7;--mut:#8B93A1;--acc:#5DCAA5;--acc-bg:#0C3B31;--acc-fg:#04342C;--bad:#F09595;--bad-bg:#3A1717;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+h1{font-size:28px;font-weight:700;margin:0;letter-spacing:-.4px}
+h2{font-size:22px;font-weight:700;margin:0 0 4px;letter-spacing:-.3px}
+.mut{color:var(--mut)} .sm{font-size:13px}
+#home{position:fixed;inset:0;bottom:calc(56px + var(--sb));overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(var(--st) + 18px) 20px 24px}
+#tabs{position:fixed;left:0;right:0;bottom:0;height:calc(56px + var(--sb));padding-bottom:var(--sb);display:flex;background:rgba(11,13,16,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:.5px solid var(--line)}
+#tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--mut)}
+#tabs button.on{color:var(--fg)}
+#tabs svg{width:22px;height:22px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.ic{width:36px;height:36px;border-radius:18px;background:var(--card);display:flex;align-items:center;justify-content:center}
+.ic svg{width:18px;height:18px}
+.bar{height:4px;background:var(--card);border-radius:2px;overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:2px}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:10px}
+.btn{display:block;width:100%;background:var(--fg);color:var(--bg);border-radius:14px;padding:14px;font-weight:600;text-align:center;margin-top:12px}
+.btn.q{background:var(--card);color:var(--fg)}
+.btn.bad{background:var(--bad-bg);color:var(--bad)}
+.card .btn.q,.card .nav .btn.q{background:var(--line)}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:.5px solid var(--line);width:100%;text-align:left}
+.row:last-child{border-bottom:0}
+.row .g{flex:1;min-width:0}
+.dot{width:26px;height:26px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;border:1px solid var(--line);color:var(--mut)}
+.dot.done{background:var(--acc);border-color:var(--acc);color:var(--acc-fg)}
+.chip{display:inline-block;background:var(--card);border-radius:8px;padding:2px 8px;font-size:12px;color:var(--acc);font-variant-numeric:tabular-nums}
+.sheet{position:fixed;inset:0;background:var(--bg);transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;z-index:10}
+.sheet.on{transform:none}
+.sh{flex:none;padding:calc(var(--st) + 8px) 12px 6px;display:flex;align-items:center;justify-content:center;position:relative;min-height:calc(var(--st) + 52px)}
+.sh .grab{width:38px;height:5px;border-radius:3px;background:var(--line)}
+.sh .back{position:absolute;right:14px;bottom:8px}
+.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 20px calc(var(--sb) + 28px)}
+video{width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;display:block}
+.vbox{aspect-ratio:16/9;background:var(--card);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px}
+.seg{display:flex;gap:6px;margin:10px 0 4px}
+.seg button{flex:1;background:var(--card);border-radius:10px;padding:8px 0;font-size:13px;color:var(--mut)}
+.seg button.on{background:var(--fg);color:var(--bg);font-weight:600}
+.trio{display:flex;gap:8px;margin-top:12px}
+.trio button{flex:1;background:var(--card);border-radius:14px;padding:12px 6px;text-align:center;font-size:14px}
+.trio button[disabled]{opacity:.35}
+.trio small{display:block;color:var(--mut);font-size:11px;margin-top:2px}
+.ch{display:flex;gap:10px;align-items:baseline;padding:9px 0;width:100%;text-align:left}
+.ch.now span:last-child{color:var(--acc)}
+.fig{background:var(--card);border-radius:16px;padding:14px;margin:12px 0}
+.fig svg{width:100%;height:auto;display:block}
+.fig text{font-family:-apple-system,sans-serif}
+.lp{margin:10px 0 0;font-size:17px;line-height:1.5}
+.nav{display:flex;gap:10px;margin-top:18px}
+.nav .btn{margin:0}
+.big{background:var(--card);border-radius:20px;padding:22px 18px;min-height:210px;display:flex;flex-direction:column;justify-content:center;font-size:19px;line-height:1.4;margin-top:12px}
+.big .a{color:var(--acc);margin-top:14px;padding-top:14px;border-top:.5px solid var(--line);font-size:17px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border-radius:14px;padding:13px 15px;margin-top:8px;border:1px solid transparent}
+.opt.ok{border-color:var(--acc);background:var(--acc-bg);color:var(--acc)}
+.opt.no{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+.empty{text-align:center;padding:60px 10px;color:var(--mut)}
+#route text{font-family:-apple-system,sans-serif}
+input[type=file]{display:none}
+</style>
+</head>
+<body>
+<main id="home"></main>
+<nav id="tabs">
+<button data-tab="route" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h6"/></svg>Маршрут</button>
+<button data-tab="watch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Вахта</button>
+</nav>
+<input type="file" id="fin" multiple accept=".mp4,.json,video/mp4,application/json">
+<input type="file" id="fone" accept=".mp4,video/mp4">
+<input type="file" id="fbak" accept=".json,application/json">
+<script>
+const VER='1.0';
+const KEY='starpom-data';
+const VDIR='starpom-video';
+const TOPICS=[[1,'Commercial for mates'],[2,'Stability'],[3,'Ship strength'],[4,'Cargo lashing'],[5,'Draft survey'],[6,'Ballast water'],[7,'MARPOL'],[8,'ISM, ISPS, MLC'],[9,'Container ship'],[0,'Вводный курс']];
+const STEP=[0,1,3,7,16,35];
+let D={v:{},cards:{},unl:{},lesson:{},quiz:{},vid:{},speed:1};
+try{Object.assign(D,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+let PACK={videos:{},order:[]};
+let tab='route';
+const $=s=>document.querySelector(s);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(D));
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);
+function fmt(s){s=Math.max(0,Math.floor(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')}
+function hrs(s){const h=s/3600;return h>=10?Math.round(h)+' ч':(Math.round(h*10)/10).toString().replace('.',',')+' ч'}
+function pl(n,a,b,c){const m=n%100,k=n%10;return n+' '+(m>10&&m<20?c:k===1?a:k>1&&k<5?b:c)}
+function mins(s){const m=Math.round(s/60);return m>=60?Math.floor(m/60)+' ч '+(m%60?m%60+' мин':''):m+' мин'}
+const ICON={x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 0 0-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 0 0 0 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2.2 1.3L10 21h4l.4-2.5a7 7 0 0 0 2.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg>',check:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'};
+
+function idb(mode,fn){return new Promise((res,rej)=>{const o=indexedDB.open('starpom-db',1);o.onupgradeneeded=()=>o.result.createObjectStore('kv');o.onerror=()=>rej(o.error);o.onsuccess=()=>{const tx=o.result.transaction('kv',mode);const r=fn(tx.objectStore('kv'));tx.oncomplete=()=>res(r&&r.result);tx.onerror=()=>rej(tx.error)}})}
+async function loadPack(){try{const p=await idb('readonly',s=>s.get('pack'));if(p&&p.videos)PACK=p}catch(e){}}
+
+function vids(t){return PACK.order.filter(id=>PACK.videos[id]&&PACK.videos[id].topic===t)}
+function vdone(id){return !!(D.v[id]&&D.v[id].done)}
+function watched(id){const v=PACK.videos[id],s=D.v[id];if(!v||!s)return 0;return s.done?v.dur:Math.min(s.p||0,v.dur)}
+function tstat(t){const a=vids(t);let tot=0,w=0,dn=0;a.forEach(id=>{tot+=PACK.videos[id].dur;w+=watched(id);if(vdone(id))dn++});return{n:a.length,tot,w,done:a.length>0&&dn===a.length,dn}}
+
+function renderHome(){const h=$('#home');const st=h.scrollTop;if(tab==='route')renderRoute(h);else renderWatch(h);h.scrollTop=st}
+function renderRoute(h){
+  let tot=0,w=0;const S={};TOPICS.forEach(([t])=>{S[t]=tstat(t);tot+=S[t].tot;w+=S[t].w});
+  const cur=(TOPICS.find(([t])=>S[t].n&&!S[t].done)||[null])[0];
+  const R=74,W=340;let svg='',pts=[];
+  TOPICS.forEach(([t],i)=>pts.push([i%2?76:34,40+i*R]));
+  const lastDone=TOPICS.findIndex(([t])=>t===cur);
+  for(let i=0;i<pts.length-1;i++){const on=lastDone<0?S[TOPICS[i][0]].done:i<lastDone;svg+=`<line x1="${pts[i][0]}" y1="${pts[i][1]}" x2="${pts[i+1][0]}" y2="${pts[i+1][1]}" stroke="${on?'var(--acc)':'var(--line)'}" stroke-width="2" ${on?'':'stroke-dasharray="4 6"'}/>`}
+  TOPICS.forEach(([t,name],i)=>{const [x,y]=pts[i],s=S[t],isCur=t===cur;
+    const fill=s.done?'var(--acc)':isCur?'var(--fg)':'var(--bg)',tc=s.done?'var(--acc-fg)':isCur?'var(--bg)':'var(--mut)';
+    const sub=!s.n?'нет материалов':s.done?'пройдено · '+hrs(s.tot):(s.w>0||isCur)?`видео ${Math.min(s.dn+1,s.n)} из ${s.n} · ${hrs(s.tot)}`:`${s.n} видео · ${hrs(s.tot)}`;
+    svg+=`<g data-t="${t}"><rect x="0" y="${y-R/2}" width="${W}" height="${R}" fill="transparent"/><circle cx="${x}" cy="${y}" r="${isCur?19:17}" fill="${fill}" stroke="${s.done||isCur?'none':'var(--line)'}" stroke-width="1.5"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" font-weight="600" fill="${tc}">${t}</text><text x="112" y="${y-2}" font-size="${isCur?19:17}" font-weight="${isCur?600:400}" fill="${isCur||s.done?'var(--fg)':'var(--mut)'}">${esc(name)}</text><text x="112" y="${y+17}" font-size="13" fill="${isCur?'var(--acc)':'var(--mut)'}">${sub}</text></g>`});
+  h.innerHTML=`<div class="top"><div><h1>Курс на старпома</h1><div class="mut sm" style="margin-top:4px">${tot?hrs(w)+' из '+hrs(tot):'Материалы не загружены'}</div></div><button class="ic" id="gear" aria-label="Настройки">${ICON.gear}</button></div>
+  <div class="bar"><i style="width:${tot?Math.round(w/tot*100):0}%"></i></div>
+  ${PACK.order.length?'':'<div class="card"><b>Загрузи материалы курса</b><div class="mut sm" style="margin-top:4px">Файл уроков и видео лежат на Mac. Скинь их в «Файлы» на iPhone и выбери здесь.</div><button class="btn" id="imp0">Загрузить материалы</button></div>'}
+  <svg id="route" viewBox="0 0 ${W} ${TOPICS.length*R+10}" style="width:100%;margin-top:8px">${svg}</svg>`;
+  $('#gear').onclick=openSettings;const b=$('#imp0');if(b)b.onclick=()=>$('#fin').click();
+  h.querySelectorAll('#route g').forEach(g=>g.onclick=()=>openTopic(+g.dataset.t));
+}
+
+const stack=[];
+function openSheet(render,opt){const el=document.createElement('section');el.className='sheet';el.innerHTML=`<div class="sh"><div class="grab"></div><button class="ic back" aria-label="Закрыть">${ICON.x}</button></div><div class="body"></div>`;document.body.appendChild(el);const s=Object.assign({el,body:el.querySelector('.body'),render},opt||{});stack.push(s);render(s.body,s);el.offsetHeight;el.classList.add('on');el.querySelector('.back').onclick=closeTop;
+  const sh=el.querySelector('.sh');let y0=null,dy=0;sh.addEventListener('touchstart',e=>{y0=e.touches[0].clientY;dy=0;el.style.transition='none'},{passive:true});sh.addEventListener('touchmove',e=>{if(y0==null)return;dy=Math.max(0,e.touches[0].clientY-y0);el.style.transform=`translateY(${dy}px)`},{passive:true});sh.addEventListener('touchend',()=>{el.style.transition='';el.style.transform='';if(dy>90)closeTop();y0=null});return s}
+function closeTop(){const s=stack.pop();if(!s)return;if(s.onclose)s.onclose();s.el.classList.remove('on');setTimeout(()=>s.el.remove(),300);const u=stack[stack.length-1];if(u){if(u.refresh)u.refresh();else{const st=u.body.scrollTop;u.render(u.body,u);u.body.scrollTop=st}}else renderHome()}
+
+function openTopic(t){const name=TOPICS.find(x=>x[0]===t)[1];openSheet(b=>{const a=vids(t),s=tstat(t);
+  b.innerHTML=`<div class="mut sm">Тема ${t}</div><h2>${esc(name)}</h2><div class="mut sm">${a.length?a.length+' видео · '+hrs(s.tot):'Материалы этой темы ещё не загружены'}</div><div style="margin-top:8px">${a.map((id,i)=>{const v=PACK.videos[id],p=D.v[id];const extra=[mins(v.dur)];if(v.lesson&&v.lesson.length)extra.push('урок');if(!D.vid[id])extra.push('видео не загружено');else if(p&&!p.done&&p.p>30)extra.push('остановился на '+fmt(p.p));
+    return `<button class="row" data-id="${id}"><span class="dot ${vdone(id)?'done':''}">${vdone(id)?ICON.check:i+1}</span><span class="g"><div>${esc(v.title)}</div><div class="mut sm">${extra.join(' · ')}</div></span></button>`}).join('')}</div>`;
+  b.querySelectorAll('.row').forEach(r=>r.onclick=()=>openVideo(r.dataset.id))})}
+
+async function videoFile(id){try{const root=await navigator.storage.getDirectory();const dir=await root.getDirectoryHandle(VDIR);const fh=await dir.getFileHandle(id+'.mp4');return await fh.getFile()}catch(e){return null}}
+function openVideo(id){const v=PACK.videos[id];let url=null,vel=null,sheet=null;
+  function buttons(b){const L=v.lesson&&v.lesson.length,C=v.cards&&v.cards.length,Q=v.quiz&&v.quiz.length;const q=D.quiz[id];
+    b.querySelector('.trio').innerHTML=`<button data-a="l" ${L?'':'disabled'}>Урок<small>${L?(D.lesson[id]?'пройден':pl(v.lesson.length,'экран','экрана','экранов')):'позже'}</small></button><button data-a="c" ${C?'':'disabled'}>Карточки<small>${C?v.cards.length+' шт.':'позже'}</small></button><button data-a="q" ${Q?'':'disabled'}>Тест<small>${Q?(q!=null?q+' из '+v.quiz.length:pl(v.quiz.length,'вопрос','вопроса','вопросов')):'позже'}</small></button>`;
+    b.querySelectorAll('.trio button').forEach(x=>x.onclick=()=>{if(vel)vel.pause();const a=x.dataset.a;if(a==='l')openLesson(id,t=>seek(t));if(a==='c')openCards(v.cards.map((c,i)=>({id:id+'#'+i,q:c[0],a:c[1]})),v.title,id);if(a==='q')openQuiz(id)})}
+  function seek(t){if(vel){vel.currentTime=t;vel.play().catch(()=>{})}}
+  function attach(b,file){url=URL.createObjectURL(file);const box=b.querySelector('#vb');box.outerHTML='<video id="vv" controls playsinline preload="metadata"></video>';vel=b.querySelector('#vv');vel.src=url;const p=D.v[id]||{};vel.addEventListener('loadedmetadata',()=>{if(p.p>5&&p.p<vel.duration-20)vel.currentTime=p.p;vel.playbackRate=D.speed||1},{once:true});
+    let last=0;vel.addEventListener('timeupdate',()=>{const t=vel.currentTime;if(Math.abs(t-last)<5)return;last=t;const s=D.v[id]||(D.v[id]={});s.p=t;if(vel.duration&&t>vel.duration*0.92)s.done=true;save();mark(b,t)});
+    vel.addEventListener('ratechange',()=>{});b.querySelectorAll('.seg button').forEach(x=>x.onclick=()=>{D.speed=+x.dataset.s;save();vel.playbackRate=D.speed;b.querySelectorAll('.seg button').forEach(y=>y.classList.toggle('on',y===x))})}
+  function mark(b,t){let cur=-1;(v.chapters||[]).forEach((c,i)=>{if(t>=c[0])cur=i});b.querySelectorAll('.ch').forEach((e,i)=>e.classList.toggle('now',i===cur))}
+  sheet=openSheet(async b=>{const tn=TOPICS.find(x=>x[0]===v.topic)[1];
+    b.innerHTML=`<div class="mut sm">${esc(tn)}</div><h2>${esc(v.title)}</h2><div id="vb" class="vbox" style="margin-top:10px"><div class="mut sm">Проверяю видео…</div></div>
+    <div class="seg">${[1,1.25,1.5,2].map(s=>`<button data-s="${s}" class="${(D.speed||1)===s?'on':''}">${String(s).replace('.',',')}×</button>`).join('')}</div>
+    <div class="trio"></div>
+    <button class="btn q" id="dn">${vdone(id)?'Отметить непросмотренным':'Отметить просмотренным'}</button>
+    ${(v.chapters||[]).length?'<div class="mut sm" style="margin:18px 0 2px">Главы</div>':''}${(v.chapters||[]).map((c,i)=>`<button class="ch" data-t="${c[0]}"><span class="chip">${fmt(c[0])}</span><span>${esc(c[1])}</span></button>`).join('')}`;
+    buttons(b);b.querySelectorAll('.ch').forEach(c=>c.onclick=()=>{seek(+c.dataset.t);b.scrollTop=0});
+    b.querySelector('#dn').onclick=e=>{const s=D.v[id]||(D.v[id]={});s.done=!s.done;save();e.target.textContent=s.done?'Отметить непросмотренным':'Отметить просмотренным'};
+    const f=D.vid[id]?await videoFile(id):null;
+    if(f&&f.size>0)attach(b,f);else{const box=b.querySelector('#vb');box.innerHTML=`<div class="mut sm">Видео не загружено в приложение.<br>Файл: ${id}.mp4</div><button class="btn q" style="width:auto;margin:0;padding:10px 16px" id="pick">Открыть из «Файлов»</button>`;box.querySelector('#pick').onclick=()=>{const i=$('#fone');i.value='';i.onchange=()=>{if(i.files[0])attach(b,i.files[0])};i.click()}}
+  },{refresh(){buttons(sheet.body)},onclose(){if(vel){vel.pause();vel.removeAttribute('src');vel.load()}if(url)URL.revokeObjectURL(url)}})}
+
+function openLesson(id,seek){const v=PACK.videos[id];let i=0;openSheet(function r(b){const s=v.lesson[i],n=v.lesson.length;
+  b.innerHTML=`<div class="mut sm">${esc(v.title)} · экран ${i+1} из ${n}</div><h2>${esc(s.h)}</h2>${s.svg?'<div class="fig">'+s.svg+'</div>':''}${(s.p||[]).map(p=>'<p class="lp">'+esc(p)+'</p>').join('')}${s.t!=null?`<p style="margin-top:14px"><button class="chip" id="tc">${fmt(s.t)} · в видео</button></p>`:''}
+  <div class="nav">${i?'<button class="btn q" id="pv">Назад</button>':''}<button class="btn" id="nx">${i<n-1?'Дальше':'Готово'}</button></div>`;
+  b.scrollTop=0;const tc=b.querySelector('#tc');if(tc)tc.onclick=()=>{closeTop();seek(s.t)};const pv=b.querySelector('#pv');if(pv)pv.onclick=()=>{i--;r(b)};
+  b.querySelector('#nx').onclick=()=>{if(i<n-1){i++;r(b)}else{D.lesson[id]=1;D.unl[id]=1;save();closeTop()}}})}
+
+function grade(cid,ok){const c=D.cards[cid]||{b:0};c.b=ok?Math.min(c.b+1,STEP.length-1):0;c.d=today()+(ok?STEP[c.b]:1);D.cards[cid]=c;save()}
+function openCards(list,title,unlockId){if(unlockId){D.unl[unlockId]=1;save()}let q=list.slice(),i=0,shown=false,ok=0,tot=list.length;openSheet(function r(b){
+  if(i>=q.length){b.innerHTML=`<div class="empty"><h2 style="color:var(--fg)">Готово</h2><p>С первого раза: ${ok} из ${tot}</p></div><button class="btn" id="dn">Закрыть</button>`;b.querySelector('#dn').onclick=closeTop;return}
+  const c=q[i];b.innerHTML=`<div class="mut sm">${esc(title)} · ${Math.min(i+1,q.length)} из ${q.length}</div><div class="big"><div>${esc(c.q)}</div>${shown?'<div class="a">'+esc(c.a)+'</div>':''}</div>${shown?'<div class="nav"><button class="btn q" id="no">Не помню</button><button class="btn" id="yes">Помню</button></div>':'<button class="btn" id="sh">Показать ответ</button>'}`;
+  const sh=b.querySelector('#sh');if(sh)sh.onclick=()=>{shown=true;r(b)};const y=b.querySelector('#yes');if(y){y.onclick=()=>{if(!c.again)ok++;grade(c.id,true);i++;shown=false;r(b)};b.querySelector('#no').onclick=()=>{grade(c.id,false);q.push(Object.assign({},c,{again:1}));i++;shown=false;r(b)}}})}
+
+function openQuiz(id){const v=PACK.videos[id];let i=0,ok=0,pick=null;openSheet(function r(b){const n=v.quiz.length;
+  if(i>=n){D.quiz[id]=Math.max(D.quiz[id]||0,ok);D.unl[id]=1;save();b.innerHTML=`<div class="empty"><h2 style="color:var(--fg)">${ok} из ${n}</h2><p>${ok/n>=0.8?'Тема усвоена.':'Стоит пересмотреть урок и пройти ещё раз.'}</p></div><button class="btn" id="dn">Закрыть</button>`;b.querySelector('#dn').onclick=closeTop;return}
+  const q=v.quiz[i];b.innerHTML=`<div class="mut sm">Тест · вопрос ${i+1} из ${n}</div><p class="lp" style="font-weight:600">${esc(q.q)}</p>${q.o.map((o,k)=>`<button class="opt ${pick!=null?(k===q.c?'ok':k===pick?'no':''):''}" data-k="${k}">${esc(o)}</button>`).join('')}${pick!=null?`<p class="lp mut" style="font-size:15px">${esc(q.w||'')}</p><button class="btn" id="nx">Дальше</button>`:''}`;
+  if(pick==null)b.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{pick=+o.dataset.k;if(pick===q.c)ok++;r(b)});else b.querySelector('#nx').onclick=()=>{i++;pick=null;r(b)}})}
+
+function dueCards(){const t=today(),out=[];PACK.order.forEach(id=>{const v=PACK.videos[id];if(!D.unl[id]||!v.cards)return;v.cards.forEach((c,i)=>{const cid=id+'#'+i,s=D.cards[cid];if(!s||s.d<=t)out.push({id:cid,q:c[0],a:c[1]})})});return out}
+function renderWatch(h){const due=dueCards();let all=0,known=0;PACK.order.forEach(id=>{const v=PACK.videos[id];if(D.unl[id]&&v.cards)v.cards.forEach((c,i)=>{all++;const s=D.cards[id+'#'+i];if(s&&s.b>=2)known++})});
+  h.innerHTML=`<div class="top"><div><h1>Вахта</h1><div class="mut sm" style="margin-top:4px">Повторение на сегодня</div></div></div>${all?`<div class="card"><div style="font-size:34px;font-weight:700">${due.length}</div><div class="mut sm">${due.length?'карточек ждут повторения':'на сегодня всё повторено'}</div><div class="bar"><i style="width:${Math.round(known/all*100)}%"></i></div><div class="mut sm">Закреплено ${known} из ${all}</div>${due.length?'<button class="btn" id="go">Начать</button>':''}</div>`:'<div class="empty">Карточки появятся здесь после первого пройденного урока.</div>'}`;
+  const g=$('#go');if(g)g.onclick=()=>{const a=due.sort(()=>Math.random()-.5).slice(0,20);openCards(a,'Вахта')}}
+
+const WORKER=`onmessage=async e=>{const{file,name,dir}=e.data;try{const root=await navigator.storage.getDirectory();const d=await root.getDirectoryHandle(dir,{create:true});const fh=await d.getFileHandle(name,{create:true});const h=await fh.createSyncAccessHandle();h.truncate(0);let off=0;const CH=4194304;while(off<file.size){const buf=await file.slice(off,off+CH).arrayBuffer();h.write(new Uint8Array(buf),{at:off});off+=buf.byteLength;postMessage({p:off/file.size})}h.flush();h.close();postMessage({done:1})}catch(err){postMessage({err:String(err&&err.message||err)})}}`;
+function storeVideo(file,name,onp){return new Promise((res,rej)=>{const w=new Worker(URL.createObjectURL(new Blob([WORKER],{type:'text/javascript'})));w.onmessage=e=>{if(e.data.p!=null)onp(e.data.p);if(e.data.done){w.terminate();res()}if(e.data.err){w.terminate();rej(new Error(e.data.err))}};w.onerror=e=>{w.terminate();rej(new Error(e.message||'worker'))};w.postMessage({file,name,dir:VDIR})})}
+let importLog=[];let importing=false;
+async function importFiles(files){if(importing||!files.length)return;importing=true;importLog=[];try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
+  const paint=()=>{const u=stack[stack.length-1];if(u&&u.isSettings)u.render(u.body,u)};if(!stack.some(s=>s.isSettings))openSettings();
+  for(const f of files){const line={n:f.name,s:'ждёт'};importLog.push(line)}paint();
+  for(let k=0;k<files.length;k++){const f=files[k],line=importLog[k];try{
+    if(/\.json$/i.test(f.name)){const p=JSON.parse(await f.text());if(!p.videos||!p.order)throw new Error('это не файл уроков');await idb('readwrite',s=>s.put(p,'pack'));PACK=p;line.s='уроки загружены'}
+    else{const m=f.name.match(/(t\d+-\d+)[^/]*\.mp4$/i);if(!m)throw new Error('имя файла не из курса');const id=m[1].toLowerCase();let last=0;await storeVideo(f,id+'.mp4',p=>{const pc=Math.round(p*100);if(pc>=last+5){last=pc;line.s=pc+'%';paint()}});D.vid[id]=f.size;save();line.s='готово'}
+  }catch(e){line.s='ошибка: '+e.message}paint()}
+  importing=false;paint()}
+$('#fin').onchange=e=>{const a=[...e.target.files];e.target.value='';importFiles(a)};
+
+function openSettings(){openSheet(async b=>{const nv=Object.keys(D.vid).length,sz=Object.values(D.vid).reduce((a,x)=>a+x,0);let est='';try{const e=await navigator.storage.estimate();est=`Занято ${(e.usage/1e9).toFixed(1).replace('.',',')} ГБ, доступно до ${(e.quota/1e9).toFixed(0)} ГБ`}catch(e){}
+  b.innerHTML=`<h2>Настройки</h2>
+  <div class="card"><b>Материалы курса</b><div class="mut sm" style="margin-top:4px">Уроки: ${PACK.order.length?PACK.order.length+' видео в списке'+(PACK.made?', пакет от '+esc(PACK.made):''):'не загружены'}<br>Видео в приложении: ${nv} · ${(sz/1e9).toFixed(2).replace('.',',')} ГБ<br>${est}</div><button class="btn" id="imp">Загрузить материалы</button>
+  ${importLog.length?'<div style="margin-top:12px">'+importLog.map(l=>`<div class="sm" style="display:flex;justify-content:space-between;gap:10px;padding:3px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.n)}</span><span class="mut" style="flex:none">${esc(l.s)}</span></div>`).join('')+'</div>':''}</div>
+  <div class="card"><b>Прогресс</b><div class="mut sm" style="margin-top:4px">Хранится только в этом приложении на телефоне.</div><button class="btn q" id="bk">Сохранить копию</button><button class="btn q" id="rs">Восстановить из копии</button><div class="mut sm" id="msg" style="margin-top:8px"></div></div>
+  <div class="card"><b>Место на телефоне</b><button class="btn bad" id="del">Удалить все видео из приложения</button><div id="cf"></div></div>
+  <p class="mut sm" style="text-align:center;margin-top:18px">Старпом ${VER}</p>`;
+  b.querySelector('#imp').onclick=()=>$('#fin').click();
+  b.querySelector('#bk').onclick=async()=>{const blob=new Blob([JSON.stringify(D)],{type:'application/json'});const name='starpom-progress-'+new Date().toISOString().slice(0,10)+'.json';const file=new File([blob],name,{type:'application/json'});try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){return}const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()};
+  b.querySelector('#rs').onclick=()=>{const i=$('#fbak');i.value='';i.onchange=async()=>{try{const d=JSON.parse(await i.files[0].text());if(!d.v||!d.cards)throw 0;const vid=D.vid;D=Object.assign({v:{},cards:{},unl:{},lesson:{},quiz:{},speed:1},d,{vid});save();b.querySelector('#msg').textContent='Прогресс восстановлен.'}catch(e){b.querySelector('#msg').textContent='Это не файл копии прогресса.'}};i.click()};
+  b.querySelector('#del').onclick=()=>{const c=b.querySelector('#cf');c.innerHTML='<div class="mut sm" style="margin-top:10px">Видео удалятся, прогресс и уроки останутся.</div><div class="nav"><button class="btn q" id="n">Отмена</button><button class="btn bad" id="y">Удалить</button></div>';c.querySelector('#n').onclick=()=>c.innerHTML='';c.querySelector('#y').onclick=async()=>{try{const root=await navigator.storage.getDirectory();await root.removeEntry(VDIR,{recursive:true})}catch(e){}D.vid={};save();const s=stack[stack.length-1];s.render(s.body,s)}};
+},{isSettings:true})}
+
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));$('#home').scrollTop=0;renderHome()});
+loadPack().then(renderHome).then(async()=>{
+  // самопроверка: ?selftest загружает пробные файлы из _test/, если они есть
+  if(location.search!=='?selftest')return;
+  const fs=await Promise.all(['starpom-pack.json','t4-01.mp4'].map(async n=>{const b=await(await fetch('_test/'+n)).blob();return new File([b],n,{type:b.type})}));
+  await importFiles(fs);
+});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
